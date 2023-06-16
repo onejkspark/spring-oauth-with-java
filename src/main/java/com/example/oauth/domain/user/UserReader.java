@@ -1,6 +1,5 @@
 package com.example.oauth.domain.user;
 
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 
 import com.example.oauth.infra.repository.UserRepository;
