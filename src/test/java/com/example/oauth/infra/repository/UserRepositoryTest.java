@@ -1,6 +1,5 @@
 package com.example.oauth.infra.repository;
 
-import com.example.oauth.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.example.oauth.domain.user.User;
 
 import java.util.stream.Stream;
 

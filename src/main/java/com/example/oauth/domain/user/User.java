@@ -1,4 +1,4 @@
-package com.example.oauth.domain;
+package com.example.oauth.domain.user;
 
 import jakarta.persistence.*;
 
