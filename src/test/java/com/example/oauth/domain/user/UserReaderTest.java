@@ -1,70 +1,70 @@
 package com.example.oauth.domain.user;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-
-import java.util.Optional;
-
+import com.example.oauth.core.exception.NotFoundException;
+import com.example.oauth.infra.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.oauth.infra.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class UserReaderTest {
 
+    @Autowired
     private UserReader userReader;
 
-    @Mock
-    private UserRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     public void init() {
-        this.userReader = new UserReader(repository);
     }
 
     @Test
     public void testGetOne_fail_emptyUser() {
 
-        String msg = "Data Not Found";
+        //given
 
-        final Long userId = 1000L;
+        final String msg = "Data Not Found";
 
-        // given
-        when(repository.findById(anyLong())).thenReturn(Optional.empty());
+        final Long findId = 10000L;
 
-        // when
-        RuntimeException e = Assertions.assertThrows(RuntimeException.class, () -> userReader.getOne(userId));
+        //given
 
-        assertEquals(msg, e.getMessage());
+        NotFoundException e = assertThrows(NotFoundException.class, () -> {
+            userReader.getOne(findId);
+        });
+
+        assertEquals(e.getMessage(), msg);
     }
 
     @Test
+    @Transactional
     public void testGetOne_Ok() {
 
         // given
-        final Long userId = 1000L;
-
         final String email = "test@daum.net";
 
         final String password = "1234";
 
         User mock = User.of(email, password);
 
-        when(repository.findById(anyLong())).thenReturn(Optional.of(mock));
+        userRepository.save(mock);
 
         // when
-        User user = userReader.getOne(userId);
+        User entity = userReader.getOne(mock.getId());
 
         // then
-        verify(repository, times(1)).findById(anyLong());
-
-        assertEquals(mock, user);
+        assertEquals(entity, mock);
+        assertEquals(entity.getEmail(), mock.getEmail());
+        assertEquals(entity.getPassword(), mock.getPassword());
     }
 }
