@@ -1,5 +1,6 @@
 package com.example.oauth.domain.user;
 
+import com.example.oauth.core.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +12,8 @@ public class UserReader {
 
     private final UserRepository userRepository;
 
-    /**
-     * Read Single User
-     *
-     * @param id
-     * @return
-     */
     public User getOne(Long id) {
-        // todo : check to custom exception
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User Not Found"));
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
     }
-
 }
