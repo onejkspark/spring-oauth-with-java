@@ -1,7 +1,8 @@
 package com.example.oauth.domain.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
@@ -31,17 +32,17 @@ public class UserReaderTest {
     @Test
     public void testGetOne_fail_emptyUser() {
 
-        String msg = "User Not Found";
+        String msg = "Data Not Found";
 
         final Long userId = 1000L;
 
         // given
-        Mockito.when(repository.findById(anyLong())).thenReturn(Optional.empty());
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
         // when
         RuntimeException e = Assertions.assertThrows(RuntimeException.class, () -> userReader.getOne(userId));
 
-        Assertions.assertEquals(msg, e.getMessage());
+        assertEquals(msg, e.getMessage());
     }
 
     @Test
@@ -56,14 +57,14 @@ public class UserReaderTest {
 
         User mock = User.of(email, password);
 
-        Mockito.when(repository.findById(anyLong())).thenReturn(Optional.of(mock));
+        when(repository.findById(anyLong())).thenReturn(Optional.of(mock));
 
         // when
         User user = userReader.getOne(userId);
 
         // then
-        Mockito.verify(repository, times(1)).findById(anyLong());
+        verify(repository, times(1)).findById(anyLong());
 
-        Assertions.assertEquals(mock, user);
+        assertEquals(mock, user);
     }
 }
