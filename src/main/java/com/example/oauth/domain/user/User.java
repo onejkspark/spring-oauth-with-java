@@ -1,8 +1,13 @@
 package com.example.oauth.domain.user;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity(name = "USERS")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -15,7 +20,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-
     public static User of(String email, String password) {
         return new User(email, password);
     }
@@ -23,20 +27,5 @@ public class User {
     private User(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    protected User() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

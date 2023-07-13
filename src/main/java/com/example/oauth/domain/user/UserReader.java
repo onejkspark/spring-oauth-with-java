@@ -1,21 +1,19 @@
 package com.example.oauth.domain.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.example.oauth.infra.repository.UserRepository;
 
 @Component
+@RequiredArgsConstructor
 public class UserReader {
 
     private final UserRepository userRepository;
 
-    public UserReader(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     /**
      * Read Single User
-     * 
+     *
      * @param id
      * @return
      */
