@@ -11,7 +11,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
@@ -38,24 +40,25 @@ public class OAuth2ClientSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .oauth2Client(oauth2 -> oauth2
-                        .clientRegistrationRepository(clientRegistrationRepository)
-                        .authorizedClientRepository(authorizedClientRepository)
-                        .authorizedClientService(authorizedClientService)
-                        .authorizationCodeGrant(codeGrant -> codeGrant
-                                .authorizationRequestRepository(authorizationRequestRepository)
-                                .authorizationRequestResolver(authorizationRequestResolver)
-                                .accessTokenResponseClient(accessTokenResponseClient)
-                        )
-                );
+
+        http.oauth2Client(oauth2 -> oauth2
+                .clientRegistrationRepository(clientRegistrationRepository)
+                .authorizedClientRepository(authorizedClientRepository)
+                .authorizedClientService(authorizedClientService)
+                .authorizationCodeGrant(codeGrant -> codeGrant
+                        .authorizationRequestRepository(authorizationRequestRepository)
+                        .authorizationRequestResolver(authorizationRequestResolver)
+                        .accessTokenResponseClient(accessTokenResponseClient)
+                )
+        );
+
         return http.build();
     }
 
     @Bean
     public OAuth2AuthorizedClientManager authorizedClientManager(OAuth2AuthorizedClientRepository authorizedClientRepository) {
 
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
+        var authorizedClientProvider =
                 OAuth2AuthorizedClientProviderBuilder.builder()
                         .authorizationCode()
                         .refreshToken()
@@ -63,9 +66,8 @@ public class OAuth2ClientSecurityConfiguration {
                         .password()
                         .build();
 
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
-                new DefaultOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, authorizedClientRepository);
+        var authorizedClientManager = new DefaultOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientRepository);
+
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 
         return authorizedClientManager;
