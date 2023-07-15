@@ -1,6 +1,5 @@
 package com.example.oauth.infra.oauth;
 
-import com.example.oauth.dto.ClientIdDTO;
 import com.example.oauth.infra.repository.ClientIdRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -8,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static org.springframework.util.Assert.notNull;
 
 /**
  * OAuth 2.0 / OpenID Connect 1.0용 저장소입니다 ClientRegistration.
@@ -42,6 +40,15 @@ public class CustomClientRegistrationRepository implements ClientRegistrationRep
 
     @Override
     public ClientRegistration findByRegistrationId(String registrationId) {
-        return clientRegistrationMap.get(registrationId);
+
+        notNull(registrationId, "registrationId is not null");
+
+        var clientRegistration = clientRegistrationMap.get(registrationId);
+
+        if (clientRegistration == null) {
+            throw new NullPointerException("clientRegistration is not null");
+        }
+
+        return clientRegistration;
     }
 }
