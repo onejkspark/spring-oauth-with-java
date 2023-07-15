@@ -43,6 +43,8 @@ public class CustomClientRegistrationRepository implements ClientRegistrationRep
 
         notNull(registrationId, "registrationId is not null");
 
+        log.trace("client id is {}", registrationId);
+
         var clientRegistration = clientRegistrationMap.get(registrationId);
 
         if (clientRegistration == null) {

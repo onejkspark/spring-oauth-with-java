@@ -7,3 +7,7 @@ CREATE TABLE IF NOT EXISTS APP_CLIENT_ID
 
 INSERT INTO APP_CLIENT_ID (client_id, client_secret)
 values ('app-client-id', 'app-client-secret');
+
+INSERT INTO APP_CLIENT_ID (client_id, client_secret)
+values ('first-client', 'noonewilleverguess');
+
